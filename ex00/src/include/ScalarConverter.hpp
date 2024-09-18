@@ -14,6 +14,14 @@ private:
 	ScalarConverter(const ScalarConverter& obj);
 	ScalarConverter& operator=(const ScalarConverter& obj);
 
+	static bool isChar(std::string& str);
+	static bool isInt(std::string& str);
+	static bool isFloat(std::string& str);
+	static bool isDouble(std::string& str);
+
+	static bool isValidInt(std::string& str);
+	static bool isValidFloat(std::string& str);
+	static bool isValidDouble(std::string& str);
 	static void fromChar(char c);
 };
 
