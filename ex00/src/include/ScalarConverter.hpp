@@ -23,6 +23,9 @@ private:
 	static bool isValidFloat(std::string& str);
 	static bool isValidDouble(std::string& str);
 
+	static void printFloat(float number);
+	static void printDouble(double number);
+
 	static void fromChar(char c);
 };
 

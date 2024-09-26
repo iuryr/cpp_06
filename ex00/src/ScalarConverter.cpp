@@ -5,6 +5,7 @@
 #include <cerrno> //errno
 #include <climits> //macro constants
 #include <limits> //numeric_limits
+#include <cmath> // modf
 
 ScalarConverter::ScalarConverter(void){}
 
@@ -202,6 +203,38 @@ bool ScalarConverter::isValidDouble(std::string& str)
 	}
 
 	return true;
+}
+
+void ScalarConverter::printFloat(float number)
+{
+	std::cout << "float: ";
+
+	if (number < 0)
+	{
+		std::cout << "-";
+		number = number * -1;
+	}
+
+	float int_part;
+	float frac_part;
+	frac_part = std::modf(number, & int_part);
+	std::cout << int_part << "." << frac_part << "f" << std::endl;
+}
+
+void ScalarConverter::printDouble(double number)
+{
+	std::cout << "double: ";
+
+	if (number < 0)
+	{
+		std::cout << "-";
+		number = number * -1;
+	}
+
+	double int_part;
+	double frac_part;
+	frac_part = std::modf(number, & int_part);
+	std::cout << int_part << "." << frac_part << std::endl;
 }
 
 void ScalarConverter::convert(std::string literal)
