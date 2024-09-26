@@ -284,7 +284,9 @@ void ScalarConverter::convert(std::string literal)
 		if (isValidDouble(literal) == false)
 		{
 			println("... but it overflowed.");
+			return;
 		}
+		fromDouble(literal);
 	}
 	else 
 	{
@@ -398,4 +400,76 @@ void ScalarConverter::fromFloat(std::string str)
 	
 	//Double
 	printDouble(static_cast<double>(number));
+}
+
+void ScalarConverter::fromDouble(std::string str)
+{
+	if (str == "nan")
+	{
+		println("Char: impossible");
+		println("Int: impossible");
+		println("Float: nanf");
+		println("Double: nan");
+		return;
+	}
+
+	if (str == "+inf" || str == "inf" || str == "-inf")
+	{
+		println("Char: impossible");
+		println("Int: impossible");
+		println("Float: " << str << "f");
+		println("Double: " << str);
+		return;
+	}
+
+	double number = std::strtod(str.c_str(), NULL);
+
+	//toChar
+	double int_part;
+	double frac_part;
+	frac_part = std::modf(number, &int_part);
+	if (frac_part != 0 || number < -128 || number > 127)
+	{
+		println("char: impossible");
+	}
+	else if (number < 32 || number > 126)
+	{
+		println("char: Non displayable");
+	}
+	else 
+	{
+		println("char: '" << static_cast<char>(number) << "'");
+	}
+
+	//toInt
+	int casted_int = static_cast<int>(number);
+	double casted_double = static_cast<double>(casted_int);
+
+	if (frac_part != 0)
+	{
+		println("Int: impossible");
+	}
+	else if (casted_double != number)
+	{
+		println("Int: impossible");
+	}
+	else 
+	{
+		println("Int: " << casted_int);
+	}
+
+	//Float
+	float casted_float = static_cast<float>(number);
+	casted_double = static_cast<double>(casted_float);
+	if (casted_double != number)
+	{
+		println("Float: impossible");
+	}
+	else 
+	{
+		printFloat(casted_float);
+	}
+	
+	//Double
+	printDouble(number);
 }

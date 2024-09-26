@@ -29,6 +29,7 @@ private:
 	static void fromChar(char c);
 	static void fromInt(std::string str);
 	static void fromFloat(std::string str);
+	static void fromDouble(std::string str);
 };
 
 #endif //_SCALAR_CONVERTER_HPP
