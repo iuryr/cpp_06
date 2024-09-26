@@ -134,7 +134,7 @@ bool ScalarConverter::isValidFloat(std::string& str)
 		return false;
 	}
 
-	if (number < std::numeric_limits<float>::min()
+	if (number < -std::numeric_limits<float>::max()
 		|| number > std::numeric_limits<float>::max())
 	{
 		return false;
@@ -218,7 +218,14 @@ void ScalarConverter::printFloat(float number)
 	float int_part;
 	float frac_part;
 	frac_part = std::modf(number, & int_part);
-	std::cout << int_part << "." << frac_part << "f" << std::endl;
+	if (frac_part == 0)
+	{
+		std::cout << int_part << "." << frac_part << "f" << std::endl;
+	}
+	else 
+	{
+		std::cout << number << "f" << std::endl;
+	}
 }
 
 void ScalarConverter::printDouble(double number)
@@ -234,7 +241,14 @@ void ScalarConverter::printDouble(double number)
 	double int_part;
 	double frac_part;
 	frac_part = std::modf(number, & int_part);
-	std::cout << int_part << "." << frac_part << std::endl;
+	if (frac_part == 0)
+	{
+		std::cout << int_part << "." << frac_part << std::endl;
+	}
+	else 
+	{
+		std::cout << number << std::endl;
+	}
 }
 
 void ScalarConverter::convert(std::string literal)
@@ -250,7 +264,9 @@ void ScalarConverter::convert(std::string literal)
 		if (isValidInt(literal) == false)
 		{
 			println("... but it overflowed.");
+			return;
 		}
+		fromInt(literal);
 	}
 	else if (isFloat(literal) == true)
 	{
@@ -258,7 +274,9 @@ void ScalarConverter::convert(std::string literal)
 		if (isValidFloat(literal) == false)
 		{
 			println("... but it overflowed.");
+			return;
 		}
+		fromFloat(literal);
 	}
 	else if (isDouble(literal) == true)
 	{
@@ -290,4 +308,94 @@ void ScalarConverter::fromChar(char c)
 	println("int: " << static_cast<int>(c));
 	printFloat(static_cast<float>(c));
 	printDouble(static_cast<double>(c));
+}
+
+void ScalarConverter::fromInt(std::string str)
+{
+	int number = std::atoi(str.c_str());
+
+	if (number < -128 || number > 127)
+	{
+		println("char: impossible");
+	}
+	else if (number < 32 || number > 126)
+	{
+		println("char: Non displayable");
+	}
+	else 
+	{
+		println("char: '" << static_cast<char>(number) << "'");
+	}
+
+	println("Int: " << number);
+	printFloat(static_cast<float>(number));
+	printDouble(static_cast<double>(number));
+}
+
+void ScalarConverter::fromFloat(std::string str)
+{
+	if (str == "nanf")
+	{
+		println("Char: impossible");
+		println("Int: impossible");
+		println("Float: nanf");
+		println("Double: nan");
+		return;
+	}
+
+	if (str == "+inff" || str == "inff" || str == "-inff")
+	{
+		std::string double_string;
+		for (unsigned long i = 0; i < str.size() - 1; i++)
+		{
+			double_string.append(str, i, 1);
+		}
+		println("Char: impossible");
+		println("Int: impossible");
+		println("Float: " << str);
+		println("Double: " << double_string);
+		return;
+	}
+
+	float number = std::strtof(str.c_str(), NULL);
+
+	//toChar
+	float int_part;
+	float frac_part;
+	frac_part = std::modf(number, &int_part);
+	if (frac_part != 0 || number < -128 || number > 127)
+	{
+		println("char: impossible");
+	}
+	else if (number < 32 || number > 126)
+	{
+		println("char: Non displayable");
+	}
+	else 
+	{
+		println("char: '" << static_cast<char>(number) << "'");
+	}
+
+	//toInt
+	int casted_int = static_cast<int>(number);
+	float casted_float = static_cast<float>(casted_int);
+
+	if (frac_part != 0)
+	{
+		println("Int: impossible");
+	}
+	else if (casted_float != number)
+	{
+		println("Int:impossible");
+	}
+	else 
+	{
+		println("Int: " << casted_int);
+	}
+
+	//Float
+	printFloat(number);
+	
+	//Double
+	printDouble(static_cast<double>(number));
 }
