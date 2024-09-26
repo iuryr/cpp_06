@@ -22,6 +22,7 @@ private:
 	static bool isValidInt(std::string& str);
 	static bool isValidFloat(std::string& str);
 	static bool isValidDouble(std::string& str);
+
 	static void fromChar(char c);
 };
 

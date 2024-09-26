@@ -81,6 +81,11 @@ bool ScalarConverter::isFloat(std::string& str)
 		return false;
 	}
 
+	if (str == "inff" || str == "+inff" || str == "-inff" || str == "nanf")
+	{
+		return true;
+	}
+
 	int dot = 0;
 	std::string::iterator it = str.begin();
 
@@ -113,7 +118,13 @@ bool ScalarConverter::isFloat(std::string& str)
 
 bool ScalarConverter::isValidFloat(std::string& str)
 {
-	double number;
+
+	if (str == "inff" || str == "+inff" || str == "-inff" || str == "nanf")
+	{
+		return true;
+	}
+
+	long double number;
 
 	errno = 0;
 	number = strtold(str.c_str(), NULL);
@@ -133,6 +144,11 @@ bool ScalarConverter::isValidFloat(std::string& str)
 
 bool ScalarConverter::isDouble(std::string& str)
 {
+	if (str == "inf" || str == "+inf" || str == "-inf" || str == "nan")
+	{
+		return true;
+	}
+	
 	int dot = 0;
 	std::string::iterator it = str.begin();
 
@@ -163,6 +179,31 @@ bool ScalarConverter::isDouble(std::string& str)
 	return true;
 }
 
+bool ScalarConverter::isValidDouble(std::string& str)
+{
+	if (str == "inf" || str == "+inf" || str == "-inf" || str == "nan")
+	{
+		return true;
+	}
+
+	long double number;
+
+	errno = 0;
+	number = strtold(str.c_str(), NULL);
+	if (errno == ERANGE)
+	{
+		return false;
+	}
+
+	if (number < std::numeric_limits<double>::min()
+		|| number > std::numeric_limits<double>::max())
+	{
+		return false;
+	}
+
+	return true;
+}
+
 void ScalarConverter::convert(std::string literal)
 {
 	if (isChar(literal) == true)
@@ -188,6 +229,10 @@ void ScalarConverter::convert(std::string literal)
 	else if (isDouble(literal) == true)
 	{
 		println("It's a Double");
+		if (isValidDouble(literal) == false)
+		{
+			println("... but it overflowed.");
+		}
 	}
 	else 
 	{
