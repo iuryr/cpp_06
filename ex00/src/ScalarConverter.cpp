@@ -242,6 +242,7 @@ void ScalarConverter::convert(std::string literal)
 	if (isChar(literal) == true)
 	{
 		println("It's a char");
+		fromChar(literal[0]);
 	}
 	else if (isInt(literal) == true)
 	{
@@ -284,9 +285,9 @@ void ScalarConverter::fromChar(char c)
 	}
 	else
 	{
-		println("Char: " << c);
+		println("Char: '" << c << "'");
 	}
 	println("int: " << static_cast<int>(c));
-	println("float: " << static_cast<float>(c));
-	println("double: " << static_cast<double>(c));
+	printFloat(static_cast<float>(c));
+	printDouble(static_cast<double>(c));
 }
