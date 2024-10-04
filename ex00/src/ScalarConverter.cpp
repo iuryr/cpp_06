@@ -6,6 +6,7 @@
 #include <climits> //macro constants
 #include <limits> //numeric_limits
 #include <cmath> // modf
+#include <iomanip>
 
 ScalarConverter::ScalarConverter(void){}
 
@@ -196,7 +197,7 @@ bool ScalarConverter::isValidDouble(std::string& str)
 		return false;
 	}
 
-	if (number < std::numeric_limits<double>::min()
+	if (number < -std::numeric_limits<double>::max()
 		|| number > std::numeric_limits<double>::max())
 	{
 		return false;
@@ -209,46 +210,14 @@ void ScalarConverter::printFloat(float number)
 {
 	std::cout << "float: ";
 
-	if (number < 0)
-	{
-		std::cout << "-";
-		number = number * -1;
-	}
-
-	float int_part;
-	float frac_part;
-	frac_part = std::modf(number, & int_part);
-	if (frac_part == 0)
-	{
-		std::cout << int_part << "." << frac_part << "f" << std::endl;
-	}
-	else 
-	{
-		std::cout << number << "f" << std::endl;
-	}
+	std::cout << std::fixed << std::setprecision(1) << number << "f" << std::endl;
 }
 
 void ScalarConverter::printDouble(double number)
 {
 	std::cout << "double: ";
 
-	if (number < 0)
-	{
-		std::cout << "-";
-		number = number * -1;
-	}
-
-	double int_part;
-	double frac_part;
-	frac_part = std::modf(number, & int_part);
-	if (frac_part == 0)
-	{
-		std::cout << int_part << "." << frac_part << std::endl;
-	}
-	else 
-	{
-		std::cout << number << std::endl;
-	}
+	std::cout << std::fixed << std::setprecision(1) << number << std::endl;
 }
 
 void ScalarConverter::convert(std::string literal)
@@ -459,15 +428,14 @@ void ScalarConverter::fromDouble(std::string str)
 	}
 
 	//Float
-	float casted_float = static_cast<float>(number);
-	casted_double = static_cast<double>(casted_float);
-	if (casted_double != number)
+	if (number < -std::numeric_limits<float>::max() ||
+		number > std::numeric_limits<float>::max())
 	{
 		println("Float: impossible");
 	}
 	else 
 	{
-		printFloat(casted_float);
+		printFloat(static_cast<float>(number));
 	}
 	
 	//Double
